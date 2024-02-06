@@ -1,20 +1,25 @@
+import { Club } from "./club.interface"
+import { Permit } from "./permit.interface"
 
 export interface User {
     id: number,
     lastname: string,
     firstname: string,
     username: string,
-    membernumber: string,
+    memberNumber: number,
     hcp: number,
+    homeclub?: string,
     email: string,
-    administrator: boolean,
+    active: boolean,
+    permit: Permit
     deleted: boolean
 }
 
 export interface MinUser {
     id: number,
-    membernumber: string,
+    memberNumber: number,
     lastname: string,
     firstname: string, 
-    hcp: number
+    hcp: number,
+    homeclub?: Club
 }
