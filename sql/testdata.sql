@@ -113,3 +113,4 @@ INSERT INTO Permit (id, nickname, isAdmin) VALUES
 INSERT INTO UserPermits (id, user_id, permit_id, startTime) VALUES
 (1, 1, 1, '2024-01-25 10:00:00'),
 (2, 2, 2, '2024-01-25 10:00:00');
+(3, 1, 2, '2024-01-25 10:00:00');

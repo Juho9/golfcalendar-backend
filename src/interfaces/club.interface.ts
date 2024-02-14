@@ -1,13 +1,13 @@
-import { Course } from "./course.interface"
+import { Course } from './course.interface'
 
 export interface Club {
-    id: number,
-    name: string,
-    nickname: string
+  id: number
+  name: string
+  nickname: string
 }
 
 export interface ClubCourses {
-    id: number,
-    name: string,
-    courses: Course[]
+  id: number
+  name: string
+  courses: Course[]
 }
