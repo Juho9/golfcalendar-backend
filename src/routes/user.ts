@@ -4,7 +4,12 @@ import {
   getAllUsers,
   getUserById,
   getUserByMemberNumber,
+  hardDeleteUser,
   insertUser,
+  setUserActive,
+  setUserInactive,
+  softDeleteUser,
+  updateUser,
 } from '../queries/user'
 import { getPermitsForUser } from '../queries/permit'
 
@@ -114,6 +119,7 @@ router.get('/min', async (req: Request, res: Response, next: NextFunction) => {
   }
 })
 
+//Add new user
 router.post('/', async (req: Request, res: Response, next: NextFunction) => {
   try {
     const lastname = req.body.lastname
@@ -141,5 +147,113 @@ router.post('/', async (req: Request, res: Response, next: NextFunction) => {
     next(err)
   }
 })
+
+//Soft delete user
+router.put(
+  '/delete',
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const result = await softDeleteUser(Number(req.query.id))
+      if (result) {
+        res.json({
+          ok: result,
+        })
+      } else {
+        res.status(404).json({ ok: false })
+      }
+    } catch (err) {
+      next(err)
+    }
+  }
+)
+
+//Hard delete user
+router.delete(
+  '/deletehard',
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const result = await hardDeleteUser(Number(req.query.id))
+      if (result) {
+        res.json({
+          ok: result,
+        })
+      } else {
+        res.status(404).json({ ok: false })
+      }
+    } catch (err) {
+      next(err)
+    }
+  }
+)
+
+//Update user
+router.put(
+  '/update',
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const updatedUser = {
+        id: req.body.id as number,
+        lastname: req.body.lastname as string,
+        firstname: req.body.firstname as string,
+        memberNumber: req.body.memberNumber as number,
+        hcp: req.body.hcp as number,
+        email: req.body.email as string,
+        homeclub: req.body.homeclub as number,
+      }
+
+      const result = await updateUser(updatedUser)
+      if (result) {
+        const user = await getUserById(updatedUser.id)
+        res.json({
+          ok: result,
+          user: user,
+        })
+      }
+    } catch (err) {
+      next(err)
+    }
+  }
+)
+
+//Update user password
+//TODO
+
+//Set user inactive
+router.put(
+  '/inactive',
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const result = await setUserInactive(Number(req.query.id))
+      if (result) {
+        res.json({
+          ok: result,
+        })
+      } else {
+        res.status(404).json({ ok: false })
+      }
+    } catch (err) {
+      next(err)
+    }
+  }
+)
+
+//Set user active
+router.put(
+  '/active',
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const result = await setUserActive(Number(req.query.id))
+      if (result) {
+        res.json({
+          ok: result,
+        })
+      } else {
+        res.status(404).json({ ok: false })
+      }
+    } catch (err) {
+      next(err)
+    }
+  }
+)
 
 export default router

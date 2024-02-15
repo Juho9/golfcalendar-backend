@@ -131,7 +131,7 @@ export const insertUser = async (
   homeclub: number
 ): Promise<boolean> => {
   const promisePool = pool.promise()
-  const username = 'FI-' + homeclub.toString() + memberNumber
+  const username = 'FI-' + homeclub.toString() + '-' + memberNumber
   const passw = firstname.substring(0, 2) + lastname.substring(0, 2)
   const [rows] = await promisePool.query<ResultSetHeader>(
     `INSERT INTO
@@ -159,6 +159,113 @@ export const insertUser = async (
       1,
       0,
     ]
+  )
+  return rows.affectedRows != 0
+}
+
+export const softDeleteUser = async (userId: number): Promise<boolean> => {
+  const promisePool = pool.promise()
+  const [rows] = await promisePool.query<ResultSetHeader>(
+    `UPDATE
+      User u
+    SET
+      u.deleted = 1
+    WHERE
+      u.id = ?
+    `,
+    [userId]
+  )
+  return rows.affectedRows != 0
+}
+
+export const hardDeleteUser = async (userId: number): Promise<boolean> => {
+  const promisePool = pool.promise()
+  const [rows] = await promisePool.query<ResultSetHeader>(
+    `DELETE
+    FROM
+      User u
+    WHERE
+      u.id = ?
+    `,
+    [userId]
+  )
+  return rows.affectedRows != 0
+}
+
+export const updateUser = async (user: any): Promise<boolean> => {
+  const promisePool = pool.promise()
+  const [rows] = await promisePool.query<ResultSetHeader>(
+    `UPDATE
+      User u
+    SET
+      u.lastname = (?),
+      u.firstname = (?),
+      u.username = (?),
+      u.memberNumber = (?),
+      u.hcp = (?),
+      u.homeclub = (?),
+      u.email = (?)
+    WHERE
+      u.id = (?)
+    `,
+    [
+      user.lastname,
+      user.firstname,
+      user.username,
+      user.memberNumber,
+      user.hcp,
+      user.homeclub,
+      user.email,
+      user.id,
+    ]
+  )
+  return rows.affectedRows != 0
+}
+
+export const updateUserPassword = async (
+  userId: number,
+  password: string
+): Promise<boolean> => {
+  const promisePool = pool.promise()
+  const [rows] = await promisePool.query<ResultSetHeader>(
+    `UPDATE
+      User u
+    SET
+      u.passw = (?)
+    WHERE
+      u.id = (?)
+    `,
+    [password, userId]
+  )
+  return rows.affectedRows != 0
+}
+
+export const setUserInactive = async (userId: number): Promise<boolean> => {
+  const promisePool = pool.promise()
+  const [rows] = await promisePool.query<ResultSetHeader>(
+    `UPDATE
+      User u
+    SET
+      u.active = 0
+    WHERE
+      u.id = (?)
+    `,
+    [userId]
+  )
+  return rows.affectedRows != 0
+}
+
+export const setUserActive = async (userId: number): Promise<boolean> => {
+  const promisePool = pool.promise()
+  const [rows] = await promisePool.query<ResultSetHeader>(
+    `UPDATE
+      User u
+    SET
+      u.active = 1
+    WHERE
+      u.id = (?)
+    `,
+    [userId]
   )
   return rows.affectedRows != 0
 }
