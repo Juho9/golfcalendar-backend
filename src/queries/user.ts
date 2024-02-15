@@ -97,3 +97,68 @@ export const getAllMinUsers = async (): Promise<MinUser[]> => {
   )
   return rows as MinUser[]
 }
+
+export const getMinUserById = async (
+  userId: number
+): Promise<MinUser | null> => {
+  const promisePool = pool.promise()
+  const [rows] = await promisePool.query<RowDataPacket[]>(
+    `SELECT
+      u.id,
+      u.lastname,
+      u.firstname,
+      u.memberNumber,
+      u.hcp,
+      c.clubname AS homeclub
+    FROM
+      User u
+    LEFT JOIN
+      Club c ON u.homeclub = c.id
+    WHERE
+      u.id = ?
+      `,
+    [userId]
+  )
+  return rows.length > 0 ? (rows[0] as MinUser) : null
+}
+
+export const insertUser = async (
+  lastname: string,
+  firstname: string,
+  memberNumber: number,
+  hcp: number,
+  email: string,
+  homeclub: number
+): Promise<boolean> => {
+  const promisePool = pool.promise()
+  const username = 'FI-' + homeclub.toString() + memberNumber
+  const passw = firstname.substring(0, 2) + lastname.substring(0, 2)
+  const [rows] = await promisePool.query<ResultSetHeader>(
+    `INSERT INTO
+      User 
+      (lastname,
+      firstname,
+      username,
+      memberNumber,
+      hcp,
+      homeclub,
+      email,
+      passw,
+      active,
+      deleted)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    [
+      lastname,
+      firstname,
+      username,
+      memberNumber,
+      hcp,
+      homeclub,
+      email,
+      passw,
+      1,
+      0,
+    ]
+  )
+  return rows.affectedRows != 0
+}

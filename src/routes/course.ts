@@ -11,7 +11,7 @@ router.get('/all', async (req: Request, res: Response, next: NextFunction) => {
     for (const course of courses) {
       formattedCourses.push({
         id: course.id,
-        coursename: course.name,
+        coursename: course.coursename,
         holes: course.holes,
       })
     }
@@ -28,7 +28,7 @@ router.get('/', async (req: Request, res: Response, next: NextFunction) => {
     if (course) {
       res.json({
         id: course.id,
-        coursename: course.name,
+        coursename: course.coursename,
         holes: course.holes,
       })
     } else {

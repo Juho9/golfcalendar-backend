@@ -13,27 +13,30 @@ CREATE DATABASE IF NOT EXISTS calendardb;
 USE calendardb;
 
 CREATE TABLE IF NOT EXISTS Club (
-    id INT PRIMARY KEY,
+    id INT AUTO_INCREMENT,
     clubname VARCHAR(255) NOT NULL,
-    nickname VARCHAR(3) NOT NULL
+    nickname VARCHAR(3) NOT NULL,
+    PRIMARY KEY (id)
 );
 
 CREATE TABLE IF NOT EXISTS Course (
-    id INT PRIMARY KEY,
+    id INT AUTO_INCREMENT,
     club_id INT,
     coursename VARCHAR(255) NOT NULL,
     holes INT(2),
+    PRIMARY KEY (id),
     FOREIGN KEY (club_id) REFERENCES Club(id)
 );
 
 CREATE TABLE IF NOT EXISTS Permit (
-    id INT PRIMARY KEY,
+    id INT AUTO_INCREMENT,
     nickname VARCHAR(255) NOT NULL,
-    isAdmin BOOLEAN
+    isAdmin BOOLEAN,
+    PRIMARY KEY (id)
 );
 
 CREATE TABLE IF NOT EXISTS User (
-    id INT PRIMARY KEY,
+    id INT AUTO_INCREMENT,
     lastname VARCHAR(255) NOT NULL,
     firstname VARCHAR(255) NOT NULL,
     username VARCHAR(10) NOT NULL CHECK (LENGTH(username) > 4 AND LENGTH(username) < 10),
@@ -44,36 +47,40 @@ CREATE TABLE IF NOT EXISTS User (
     passw VARCHAR(255),
     active BOOLEAN,
     deleted BOOLEAN NOT NULL,
+    PRIMARY KEY (id),
     FOREIGN KEY (homeclub) REFERENCES Club(id)
 );
 
 CREATE TABLE IF NOT EXISTS Reservation (
-    id INT PRIMARY KEY,
+    id INT AUTO_INCREMENT,
     course_id INT NOT NULL,
     creator_id INT NOT NULL,
     player_id INT NOT NULL,
     creationDate DATETIME NOT NULL,
     startTime DATETIME NOT NULL,
     deleted BOOLEAN NOT NULL,
+    PRIMARY KEY (id),
     FOREIGN KEY (course_id) REFERENCES Course(id),
     FOREIGN KEY (creator_id) REFERENCES User(id),
     FOREIGN KEY (player_id) REFERENCES User(id)
 );
 
 CREATE TABLE IF NOT EXISTS UserReservations (
-    id INT PRIMARY KEY,
+    id INT AUTO_INCREMENT,
     user_id INT NOT NULL,
     reservation_id INT NOT NULL,
+    PRIMARY KEY (id),
     FOREIGN KEY (user_id) REFERENCES User(id),
     FOREIGN KEY (reservation_id) REFERENCES Reservation(id)
 );
 
 CREATE TABLE IF NOT EXISTS UserPermits (
-    id INT PRIMARY KEY,
+    id INT AUTO_INCREMENT,
     user_id INT NOT NULL,
     permit_id INT NOT NULL,
     startTime DATETIME NOT NULL,
     endTime DATETIME,
+    PRIMARY KEY (id),
     FOREIGN KEY (user_id) REFERENCES User(id),
     FOREIGN KEY (permit_id) REFERENCES Permit(id)
 );
@@ -112,5 +119,5 @@ INSERT INTO Permit (id, nickname, isAdmin) VALUES
 -- Insert data into UserPermits table
 INSERT INTO UserPermits (id, user_id, permit_id, startTime) VALUES
 (1, 1, 1, '2024-01-25 10:00:00'),
-(2, 2, 2, '2024-01-25 10:00:00');
+(2, 2, 2, '2024-01-25 10:00:00'),
 (3, 1, 2, '2024-01-25 10:00:00');

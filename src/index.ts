@@ -7,14 +7,19 @@ import cors from 'cors'
 import userRouter from './routes/user'
 import clubRouter from './routes/club'
 import courseRouter from './routes/course'
+import reservationRouter from './routes/reservation'
 
+const bodyParser = require('body-parser')
 const app = express()
 app.use(cors({ credentials: true, origin: true }))
 app.use(cors({ credentials: true, origin: '*' }))
+app.use(bodyParser.json())
+
 // Endpoints
 app.use('/user', userRouter)
 app.use('/club', clubRouter)
 app.use('/course', courseRouter)
+app.use('/reservation', reservationRouter)
 
 const pool = mysql.createPool({
   host: process.env.DATABASE_SERVER,

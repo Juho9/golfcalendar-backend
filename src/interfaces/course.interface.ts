@@ -1,5 +1,5 @@
 export interface Course {
   id: number
-  name: string
+  coursename: string
   holes: number
 }

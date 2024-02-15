@@ -3,11 +3,11 @@ import { User } from './user.interface'
 
 export interface Reservation {
   id: number
-  course: Course
-  player: User
-  creator: User
-  creationDate: Date
+  coursename: string
+  player_id: number
+  creator_id: number
   startTime: Date
+  creationDate: Date
   deleted: boolean
 }
 

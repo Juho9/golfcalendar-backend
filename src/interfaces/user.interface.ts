@@ -8,7 +8,7 @@ export interface User {
   username: string
   memberNumber: number
   hcp: number
-  homeclub?: string
+  homeclub: string
   email: string
   active: boolean
   permit: Permit[]

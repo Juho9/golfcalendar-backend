@@ -4,6 +4,7 @@ import {
   getAllUsers,
   getUserById,
   getUserByMemberNumber,
+  insertUser,
 } from '../queries/user'
 import { getPermitsForUser } from '../queries/permit'
 
@@ -108,6 +109,34 @@ router.get('/min', async (req: Request, res: Response, next: NextFunction) => {
       })
     }
     res.json(formattedUsers)
+  } catch (err) {
+    next(err)
+  }
+})
+
+router.post('/', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const lastname = req.body.lastname
+    const firstname = req.body.firstname
+    const memberNumber = req.body.memberNumber
+    const hcp = req.body.hcp
+    const email = req.body.email
+    const homeclub = req.body.homeclub
+    const result = await insertUser(
+      lastname,
+      firstname,
+      memberNumber,
+      hcp,
+      email,
+      homeclub
+    )
+    if (result) {
+      const users = await getAllUsers()
+      res.json({
+        ok: result,
+        users: users,
+      })
+    }
   } catch (err) {
     next(err)
   }
