@@ -8,6 +8,7 @@ export interface Reservation {
   creator_id: number
   startTime: Date
   creationDate: Date
+  arrived: boolean
   deleted: boolean
 }
 
@@ -18,5 +19,6 @@ export interface MinReservation {
   creator: string
   startTime: Date
   creationDate: Date
+  arrived: boolean
   deleted: boolean
 }

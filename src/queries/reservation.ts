@@ -12,6 +12,7 @@ export const getAllReservations = async (): Promise<Reservation[]> => {
       r.player_id,
       r.creationDate,
       r.startTime,
+      r.arrived,
       r.deleted
     FROM
       Reservation r
@@ -34,6 +35,7 @@ export const getReservationById = async (
       r.player_id,
       r.creationDate,
       r.startTime,
+      r.arrived,
       r.deleted
     FROM
       Reservation r
@@ -59,6 +61,7 @@ export const getAllReservationsForUser = async (
       r.player_id,
       r.creationDate,
       r.startTime,
+      r.arrived,
       r.deleted
     FROM
       Reservation r
@@ -84,6 +87,7 @@ export const getAllDeletedReservationsForUser = async (
       r.player_id,
       r.creationDate,
       r.startTime,
+      r.arrived,
       r.deleted
     FROM
       Reservation r
@@ -95,4 +99,89 @@ export const getAllDeletedReservationsForUser = async (
     [userId]
   )
   return rows as Reservation[]
+}
+
+export const insertReservation = async (
+  courseId: number,
+  creatorId: number,
+  playerId: number,
+  startTime: string
+): Promise<boolean> => {
+  const creationDate = new Date()
+  const promisePool = pool.promise()
+  const [rows] = await promisePool.query<ResultSetHeader>(
+    `INSERT INTO
+      Reservation(
+        course_id,
+        creator_id,
+        player_id,
+        creationDate,
+        startTime,
+        arrived,
+        deleted
+      )
+    VALUES (?, ?, ?, ?, ?, ?, ?)`,
+    [courseId, creatorId, playerId, creationDate, startTime, 0, 0]
+  )
+  return rows.affectedRows != 0
+}
+
+export const updateReservation = async (reservation: any): Promise<boolean> => {
+  const promisePool = pool.promise()
+  const [rows] = await promisePool.query<ResultSetHeader>(
+    `UPDATE
+      Reservation r
+    SET
+      r.course_id = (?),
+      r.creator_id = (?),
+      r.creationDate = (?),
+      r.startTime = (?)
+    WHERE
+      r.id = (?)
+    `,
+    [
+      reservation.courseId,
+      reservation.creatorId,
+      reservation.creationDate,
+      reservation.startTime,
+      reservation.id,
+    ]
+  )
+  return rows.affectedRows != 0
+}
+
+export const updateReservationArrivedStatus = async (
+  reservationId: number,
+  arrived: boolean
+): Promise<boolean> => {
+  const promisePool = pool.promise()
+  const status = !arrived
+  const [rows] = await promisePool.query<ResultSetHeader>(
+    `UPDATE
+      Reservation r
+    SET
+      r.arrived = (?)
+    WHERE
+      r.id = (?)
+    `,
+    [status, reservationId]
+  )
+  return rows.affectedRows != 0
+}
+
+export const softDeleteReservaiton = async (
+  reservationId: number
+): Promise<boolean> => {
+  const promisePool = pool.promise()
+  const [rows] = await promisePool.query<ResultSetHeader>(
+    `UPDATE
+      Reservation r
+    SET
+      r.deleted = 1
+    WHERE
+      r.id = (?)
+    `,
+    [reservationId]
+  )
+  return rows.affectedRows != 0
 }

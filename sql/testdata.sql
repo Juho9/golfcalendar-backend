@@ -58,20 +58,12 @@ CREATE TABLE IF NOT EXISTS Reservation (
     player_id INT NOT NULL,
     creationDate DATETIME NOT NULL,
     startTime DATETIME NOT NULL,
+    arrived BOOLEAN NOT NULL,
     deleted BOOLEAN NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (course_id) REFERENCES Course(id),
     FOREIGN KEY (creator_id) REFERENCES User(id),
     FOREIGN KEY (player_id) REFERENCES User(id)
-);
-
-CREATE TABLE IF NOT EXISTS UserReservations (
-    id INT AUTO_INCREMENT,
-    user_id INT NOT NULL,
-    reservation_id INT NOT NULL,
-    PRIMARY KEY (id),
-    FOREIGN KEY (user_id) REFERENCES User(id),
-    FOREIGN KEY (reservation_id) REFERENCES Reservation(id)
 );
 
 CREATE TABLE IF NOT EXISTS UserPermits (
@@ -102,14 +94,10 @@ INSERT INTO User (id, lastname, firstname, username, memberNumber, hcp, homeclub
 (3, 'Brown', 'Bob', 'bobbrown', 9876, 8.3, 1, 'bob.brown@email.com', 'password789', false, false);
 
 -- Insert data into Reservation table
-INSERT INTO Reservation (id, course_id, creator_id, player_id, creationDate, startTime, deleted) VALUES
-(1, 1, 1, 2, '2024-01-25 10:00:00', '2024-01-26 12:00:00', false),
-(2, 2, 2, 1, '2024-01-26 08:00:00', '2024-01-27 10:30:00', false);
-
--- Insert data into UserReservations table
-INSERT INTO UserReservations (id, user_id, reservation_id) VALUES
-(1, 1, 1),
-(2, 2, 2);
+INSERT INTO Reservation (id, course_id, creator_id, player_id, creationDate, startTime, arrived, deleted) VALUES
+(1, 1, 1, 2, '2024-01-25 10:00:00', '2024-01-26 12:00:00', false, false),
+(2, 2, 2, 1, '2024-01-26 08:00:00', '2024-01-27 10:30:00', false, false),
+(3, 2, 3, 3, '2024-01-26 08:00:00', '2024-01-27 10:30:00', false, false);
 
 -- Insert data into Permit table
 INSERT INTO Permit (id, nickname, isAdmin) VALUES
