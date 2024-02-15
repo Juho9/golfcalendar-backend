@@ -66,7 +66,7 @@ export const updateClub = async (club: any): Promise<boolean> => {
   return rows.affectedRows != 0
 }
 
-export const hardDeleteClub = async (userId: number): Promise<boolean> => {
+export const hardDeleteClub = async (clubId: number): Promise<boolean> => {
   const promisePool = pool.promise()
   const [rows] = await promisePool.query<ResultSetHeader>(
     `DELETE
@@ -75,7 +75,7 @@ export const hardDeleteClub = async (userId: number): Promise<boolean> => {
     WHERE
       c.id = ?
     `,
-    [userId]
+    [clubId]
   )
   return rows.affectedRows != 0
 }
