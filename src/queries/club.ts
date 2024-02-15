@@ -32,3 +32,50 @@ export const getClubById = async (clubId: number): Promise<Club | null> => {
   )
   return rows.length > 0 ? (rows[0] as Club) : null
 }
+
+export const insertClub = async (
+  clubname: string,
+  nickname: string
+): Promise<boolean> => {
+  const promisePool = pool.promise()
+  const [rows] = await promisePool.query<ResultSetHeader>(
+    `INSERT INTO
+      Club(
+        clubname,
+        nickname
+      )
+    VALUES (?, ?)`,
+    [clubname, nickname]
+  )
+  return rows.affectedRows != 0
+}
+
+export const updateClub = async (club: any): Promise<boolean> => {
+  const promisePool = pool.promise()
+  const [rows] = await promisePool.query<ResultSetHeader>(
+    `UPDATE
+      Club c
+    SET
+      c.clubname = (?),
+      c.nickname = (?)
+    WHERE
+      c.id = (?)
+    `,
+    [club.clubname, club.nickname, club.id]
+  )
+  return rows.affectedRows != 0
+}
+
+export const hardDeleteClub = async (userId: number): Promise<boolean> => {
+  const promisePool = pool.promise()
+  const [rows] = await promisePool.query<ResultSetHeader>(
+    `DELETE
+    FROM
+      Club c
+    WHERE
+      c.id = ?
+    `,
+    [userId]
+  )
+  return rows.affectedRows != 0
+}
